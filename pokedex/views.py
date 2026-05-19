@@ -1,6 +1,8 @@
 from django.http import HttpResponse
 from django.template import loader
 from .models import Pokemon, Trainer
+from django.shortcuts import redirect, render
+from pokedex.forms import PokemonForm
 
 def index(request):
     pokemons = Pokemon.objects.all()  #Obtener todos los objetos Pokémon de la base de datos utilizando el modelo Pokémon (Select * from pokedex_pokemon)
@@ -27,6 +29,36 @@ def trainer_details(request, trainer_id):
         'trainer': trainer
     }
     return HttpResponse(template.render(context, request))
+
+def add_pokemon (request):
+    if request.method == 'POST':
+        form = PokemonForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('pokedex:index')
+    
+    else:
+        form = PokemonForm()
+        
+    return render(request, 'pokemon_form.html', {'form': form})
+
+def edit_pokemon (request, pokemon_id):
+    pokemon = Pokemon.objects.get(id = pokemon_id)
+    if request.method == 'POST':
+        form = PokemonForm(request.POST, request.FILES, instance=pokemon)
+        if form.is_valid():
+            form.save()
+            return redirect('pokedex:index')
+    
+    else:
+        form = PokemonForm(instance=pokemon)
+        
+    return render(request, 'pokemon_form.html', {'form': form})
+
+def delete_pokemon(request, pokemon_id):
+    pokemon = Pokemon.objects.get(id = pokemon_id) #Obtener un objeto Pokémon específico de la base
+    pokemon.delete() #Eliminar el objeto Pokémon de la base de datos
+    return redirect('pokedex:index')
 
 
 

@@ -2,6 +2,7 @@
 {% block title %}Pagina Principal{% endblock title %}
 {% block content %}
 <h3>Pokemons </h3>
+<a href="{% url "pokedex:add_pokemon" %}">Agregar Pokemon</a>
 <div class="row">
     {% for pokemon in pokemons %}
     <div class="col-sm-4">
@@ -14,6 +15,12 @@
                 <p class="card-text">Altura: {{ pokemon.height }}</p>
                 <a href="{{pokemon.id}}" class="btn btn-primary">
                     <i class="fa-solid fa-eye"></i>
+                </a>
+                <a href="edit_pokemon/{{pokemon.id}}" class="btn btn-primary">
+                    <i class="fa-solid fa-pencil"></i>
+                </a>
+                <a href="delete_pokemon/{{pokemon.id}}" class="btn btn-danger">
+                    <i class="fa-solid fa-trash"></i>
                 </a>
             </div>
         </div>
